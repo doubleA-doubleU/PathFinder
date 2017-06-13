@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aaron.pathfinder.MainActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blue Less Than: 200" />
+
+        <SeekBar
+            android:id="@+id/seek1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:max="255"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp"
+            android:progress="200"
+            android:secondaryProgress="0" />
+
+        <TextView
+            android:id="@+id/textView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Green Less Than: 200" />
+
+        <SeekBar
+            android:id="@+id/seek2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:max="255"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp"
+            android:progress="200"
+            android:secondaryProgress="0" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start/Stop" />
+
+        <SurfaceView
+            android:id="@+id/surfaceview"
+            android:layout_width="640px"
+            android:layout_height="480px" />
+
+        <TextureView
+            android:id="@+id/textureview"
+            android:layout_width="640px"
+            android:layout_height="480px" />
+
+        <TextView
+            android:id="@+id/textView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X: \nY: \nLap Time: " />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
