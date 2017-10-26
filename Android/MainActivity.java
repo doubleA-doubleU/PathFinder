@@ -60,8 +60,8 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
     private SeekBar threshold;
     private SeekBar threshold2;
     private Button button;
-    int thresh = 200;
-    int thresh2 = 200;
+    int thresh = 125;
+    int thresh2 = 300;
     int go = 0;
 
     private UsbManager manager;
@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
                     // send 641 to the PIC to stop motors (outside of expected range for COM)
                     int temp = 641;
                     String sendString = String.valueOf(temp) + '\n';
-                    for (int j = 0; j < 3; j++) {
+                    for (int j = 0; j < 3; j++) { // send multiple times to make sure the robot "hears" it
                         try {
                             sPort.write(sendString.getBytes(), 10); // 10 is the timeout
                         } catch (IOException e) {
@@ -152,7 +152,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 thresh = progress;
-                myTextView.setText("Blue Less Than: "+thresh);
+                myTextView.setText("Blue Greater Than: "+thresh);
             }
 
             @Override
@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 thresh2 = progress;
-                myTextView2.setText("Green Less Than: "+thresh2);
+                myTextView2.setText("Start Y: "+thresh2);
             }
 
             @Override
@@ -305,13 +305,11 @@ public class MainActivity extends Activity implements TextureView.SurfaceTexture
             if (c != null) {
                 int[] pixels = new int[bmp.getWidth()]; // pixels[] is the RGBA data
 
-                int startY = 300; // which row in the bitmap to analyze to read
+                int startY = thresh2; // which row in the bitmap to analyze to read
                 bmp.getPixels(pixels, 0, bmp.getWidth(), 0, startY, bmp.getWidth(), 1);
                 // in the row, see if the pixel is grey or brown
                 for (int i = 0; i < bmp.getWidth(); i++) {
-                    if (blue(pixels[i]) < thresh & green(pixels[i]) < thresh2 &
-                            red(pixels[i]) > (green(pixels[i]) +5 )&
-                            red(pixels[i]) > (blue(pixels[i])) +5) {
+                    if (blue(pixels[i]) > thresh) {
                         pixels[i] = rgb(0, 255, 0); // over write the pixel with pure green
                         // COM pixel calculation
                         M = M + 1;

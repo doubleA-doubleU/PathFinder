@@ -170,19 +170,21 @@ typedef struct
 } APP_DATA;
 
 #define DEG_PER_CORE 0.0009 // equal to (180 deg) / (8333 us) / (24 core tick per us)
-#define LIGHTHOUSEHEIGHT 7.0 // in feet
+#define LIGHTHOUSEHEIGHT 2.25 // in meters
+#define LIGHTHOUSEANGLE 35 // in degrees
 #define DEG_TO_RAD 0.01745 // pi/180
-// structure to store the sensor data
-typedef struct {
-  long changeTime[11];
-  long prevMic; // used to detect timer overflow
-  double horzAng;
-  double vertAng;
-  int useMe;
-  int collected; // is changeTime full
-} viveSensor;
 
-volatile viveSensor V1;
+uint8_t APP_MAKE_BUFFER_DMA_READY dataOut[APP_READ_BUFFER_SIZE];
+uint8_t APP_MAKE_BUFFER_DMA_READY readBuffer[APP_READ_BUFFER_SIZE];
+int len, i = 0, j = 0, startTime = 0, go = 0;
+char rx[64]; // the raw data
+int rxPos = 0; // how much data has been stored
+int gotRx = 0; // the flag
+int rxVal = 0; // a place to store the int that was received
+int dutyL =0, dutyR = 0; // PWM duty cycles for left and right motors
+double xPos = 0.0, yPos = 0.0, xAng = 0.0, yAng = 0.0, xStart = 0.0, yStart = 0.0;
+float lapTime = 0.0; // in seconds
+
 
 // *****************************************************************************
 // *****************************************************************************

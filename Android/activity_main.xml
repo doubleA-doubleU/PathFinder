@@ -29,7 +29,7 @@
             android:id="@+id/textView01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Blue Less Than: 200" />
+            android:text="Blue Greater Than: 125" />
 
         <SeekBar
             android:id="@+id/seek1"
@@ -39,24 +39,24 @@
             android:max="255"
             android:paddingBottom="0dp"
             android:paddingTop="0dp"
-            android:progress="200"
+            android:progress="125"
             android:secondaryProgress="0" />
 
         <TextView
             android:id="@+id/textView02"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Green Less Than: 200" />
+            android:text="Start Y: 300" />
 
         <SeekBar
             android:id="@+id/seek2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:max="255"
+            android:max="480"
             android:paddingBottom="0dp"
             android:paddingTop="0dp"
-            android:progress="200"
+            android:progress="300"
             android:secondaryProgress="0" />
 
         <Button
@@ -78,8 +78,7 @@
         <TextView
             android:id="@+id/textView03"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="X: \nY: \nLap Time: " />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

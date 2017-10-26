@@ -70,7 +70,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 	
-	
+#define CYCLE 200000	
 	
 void __ISR(_USB_1_VECTOR, ipl4AUTO) _IntHandlerUSBInstance0(void)
 {
@@ -78,39 +78,40 @@ void __ISR(_USB_1_VECTOR, ipl4AUTO) _IntHandlerUSBInstance0(void)
 }
 
 void __ISR(_INPUT_CAPTURE_4_VECTOR, IPL5SOFT) IC4ISR(void) {
-
-    // get the time the interrupt occurred
-    long mic = _CP0_GET_COUNT();
-    int i;
-
-    int unused = IC4BUF; // the value of timer2 right now, doesn't matter
-
-    // check for coreTimer overflow
-    while (mic - V1.prevMic < 0) {
-        mic = mic + 4294967295; // largest unsigned 32bit int
-    }
-
-    // shift the time into the buffer
-    for (i = 0; i < 10; i++) {
-        V1.changeTime[i] = V1.changeTime[i + 1];
-    }
-    V1.changeTime[10] = mic;
-
-    // if the buffer is not full
-    if (V1.collected < 11) {
-        V1.collected++;
-    } else {
-        // if the timer values match the waveform pattern when about 7 feet away from the emitter
-        if ((V1.changeTime[1] - V1.changeTime[0] > 7000 * 24) && (V1.changeTime[3] - V1.changeTime[2] > 7000 * 24) && (V1.changeTime[6] - V1.changeTime[5] < 50 * 24) && (V1.changeTime[10] - V1.changeTime[9] < 50 * 24)) {
-            V1.horzAng = (V1.changeTime[5] - V1.changeTime[4]) * DEG_PER_CORE;
-            V1.vertAng = (V1.changeTime[9] - V1.changeTime[8]) * DEG_PER_CORE;
-            V1.useMe = 1;
-            LATAbits.LATA4 = !LATAbits.LATA4; // blink your LED to know you got new position data info
+    static unsigned int pts=0;      // previous time stamp for right sensor
+    static int state = -1;          // state of right sensor
+    unsigned int ts;                // time stamp for right sensor
+    int unusedR = IC4BUF;           // the value of timer2 right now, doesn't matter
+    unusedR = IC4BUF;               // read multiple times to ensure the buffer is cleared
+    unusedR = IC4BUF;               // ...
+    unusedR = IC4BUF;               // ...
+    if (PORTBbits.RB7) {            // ignore rising edges
+        IFS0bits.IC4IF = 0;         // clear interrupt flag
+        return;                     // exit the ISR
+    }    
+    ts = _CP0_GET_COUNT();          // get the current time
+    if (pts > 0) {                  // won't calculate anything the first time through
+        unsigned int l = ts - pts;  // calculate elapsed time
+        if  (l > CYCLE) {           // indicates a synchronization cycle
+            state = 0;             // prepare to read y angle (from right to left)
+        } else {
+            if (state >= 0) {
+                switch (state) {   
+                    case 0: {
+                        yAng=l*0.0006;  // read y angle in degrees (0 to 120)
+                        break;
+                    }
+                    case 2: {
+                        xAng=l*0.0006;  // read x angle in degrees (0 to 120)
+                        break;
+                    }
+                }
+                state++;                       // cycle through states
+                if (state >=4 ) state = -1;   // reset state
+            }
         }
     }
-
-    V1.prevMic = mic;
-
+    pts=ts;           // set the previous time stamp for the next time through
     IFS0bits.IC4IF = 0; // clear the interrupt flag
 }
 
